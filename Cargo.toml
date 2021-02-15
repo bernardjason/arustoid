@@ -1,0 +1,27 @@
+[package]
+name = "arustoid"
+version = "0.1.0"
+authors = ["bernardcjason@gmail.com <bernardcjason@gmail.com>"]
+edition = "2018"
+
+# this saved a huge amount of time, thanks https://blog.therocode.net/2020/10/a-guide-to-rust-sdl2-emscripten
+
+[dependencies]
+emscripten_main_loop = "0.1"
+cgmath = "0.16.1"
+rand = "0.7"
+sdl2 = "0.34"
+image = "0.19.0"
+lazy_static = "1.0"
+
+
+[build-dependencies]
+gl_generator = "0.14"
+
+[target.wasm32-unknown-emscripten]
+rustflags = [
+    "-C", "link-arg=-sUSE_SDL=2",
+]
+
+
+

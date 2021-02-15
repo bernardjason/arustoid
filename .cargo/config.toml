@@ -1,0 +1,13 @@
+[target.wasm32-unknown-emscripten]
+rustflags = [
+"-C", "link-arg=-s", "-C", "link-arg=USE_SDL=2",
+"-C", "link-arg=-s", "-C", "link-arg=MIN_WEBGL_VERSION=2",
+"-C", "link-arg=-s", "-C", "link-arg=MAX_WEBGL_VERSION=2",
+"-C", "link-arg=--embed-file", "-C", "link-arg=bullet.png",
+"-C", "link-arg=--embed-file", "-C", "link-arg=rock.png",
+"-C", "link-arg=--embed-file", "-C", "link-arg=rocket.png",
+"-C", "link-arg=-s", "-C", "link-arg=EXTRA_EXPORTED_RUNTIME_METHODS=[\"ccall\",\"cwrap\"]",
+"-Clink-args=--js-library main.js"
+]
+
+

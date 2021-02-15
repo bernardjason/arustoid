@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <script>
+
+ 
+function Encodeuint8arr(myString){
+    return new TextEncoder("utf-8").encode(myString);
+}
+        var Module = {};
+        var __cargo_web = {};
+        Object.defineProperty(Module, 'canvas', {
+            get: function () {
+                if (__cargo_web.canvas) {
+                    return __cargo_web.canvas;
+                }
+
+                var canvas = document.createElement('canvas');
+                // Disable right-click on the canvas
+                canvas.addEventListener('contextmenu', event => event.preventDefault());
+                canvas.setAttribute("id", "canvas");
+                canvas.setAttribute("width", "1280");
+                canvas.setAttribute("height", "800");
+                // var body = document.querySelector('body')
+		var body = document.getElementById("game_window");	
+                body.insertBefore(canvas, body.firstChild);
+                __cargo_web.canvas = canvas;
+                return canvas;
+            }
+        });
+</script>
+
+  </head>
+  <body id="myFrame">
+    Player <input type="text" id="player_number" value="1"><br>
+    <div id="game_window">
+    </div>
+    <script>
+    	var query = window.location.search.substring(1);
+    	if ( query == "player=2" ) {
+		document.getElementById("player_number").value = "2";	
+    	} else {
+		console.log("Query ["+query+"]");
+	}
+
+       function game_read() {
+                        const s = convert("this is javascript back");
+                        console.log("XXXXXXXXXXXX "+JSON.stringify(s));
+                        return s;
+        }
+       function game_write(output) {
+        console.log("javascript got this from Rust ["+UTF8ToString(output)+"]");
+        }
+
+    </script>
+    <script src='./arustoid.js'></script>
+    <script>
+        var i=0;
+	var small_pause = 0;
+	var javascript_write = Module.cwrap('javascript_write', 'number', ['string'])
+	var javascript_read  = Module.cwrap('javascript_read', 'string', [])
+	function ping() {
+		var now = " now is "+Date.now();
+		javascript_write(now+"\0");
+	}
+	function get_game() {
+		var got = javascript_read();
+		console.log(got);
+	}
+	function start_worker() {
+		w = new Worker("worker.js");
+        	w.onmessage = function(event){
+			javascript_write(event.data+"\0");
+		};
+		timedCount();
+	}
+	function timedCount() {
+		if ( small_pause > 0 ) {
+  			i=i+1;
+			back_to_server = javascript_read();
+			w.postMessage(back_to_server);
+		} else {
+			player = document.getElementById("player_number").value;
+			w.postMessage(player);
+		}
+		small_pause = small_pause +1;
+  		setTimeout("timedCount()",33);
+	}
+        setTimeout(function(){
+           start_worker();
+        }, 1500);
+    </script>
+  </body>
+</html>
