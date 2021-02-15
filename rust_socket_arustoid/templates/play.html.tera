@@ -1,0 +1,110 @@
+<html>
+<head>
+    <meta http-equiv="Cache-control" content="private">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <link rel="stylesheet" type="text/css" href="{{ proxy_prefix | safe }}css/style.css">
+    <script>
+        var Module = {};
+        var __cargo_web = {};
+        Object.defineProperty(Module, 'canvas', {
+            get: function () {
+                if (__cargo_web.canvas) {
+                    return __cargo_web.canvas;
+                }
+
+                var canvas = document.createElement('canvas');
+                // Disable right-click on the canvas
+                canvas.addEventListener('contextmenu', event => event.preventDefault());
+                canvas.setAttribute("id", "canvas");
+                canvas.setAttribute("width", "1024");
+                canvas.setAttribute("height", "600");
+                canvas.setAttribute("style", "border:8px solid blue");
+                // var body = document.querySelector('body')
+		        var body = document.getElementById("game_window");
+                body.insertBefore(canvas, body.firstChild);
+                __cargo_web.canvas = canvas;
+                return canvas;
+            }
+        });
+
+    </script>
+
+
+</head>
+<body id="myFrame">
+<div class="grid-container">
+    <input type="hidden" id="player_number" value="{{ player_number }}">
+    <div class="grid">
+        <div class="title">
+            <a href="{{ proxy_prefix | safe }}"><h1>aRustOid<img class="headingicon" src="{{ proxy_prefix | safe }}img/bannerpixelship.png"></h1></a>
+            <h2>game {{game_number}}</h2>
+        </div>
+        <div class="score" id="scores">
+        </div>
+        <div class="game">
+            <div id="loading">
+                <h2>Loading large WASM file......can take up to 30 seconds</h2>
+                <div class="loader">loading...</div>
+            </div>
+            <p id="game_window"></p>
+        </div>
+    </div>
+</div>
+<script src='{{ proxy_prefix | safe }}wasm/arustoid.js'></script>
+<script>
+    var i=0;
+	var small_pause = 0;
+	var javascript_write = Module.cwrap('javascript_write', 'number', ['string'])
+	var javascript_read  = Module.cwrap('javascript_read', 'string', [])
+	var javascript_read_stats  = Module.cwrap('javascript_read_stats', 'string', [])
+    var audioHit = document.createElement("audio");
+    audioHit.src = "{{ proxy_prefix  | safe}}wasm/hit.mp3";
+    audioHit.preload = "auto";
+
+    function play_sound(id) {
+      audioHit.play();
+    }
+
+	// should be called by rust when it is all fully loaded (main.js too)
+	function start_worker() {
+	    document.getElementById("loading").hidden =true;
+		w = new Worker("{{ proxy_prefix | safe }}js/worker.js");
+        w.onmessage = function(event){
+			javascript_write(event.data+"\0");
+		};
+		timedCount();
+	}
+	function timedCount() {
+		if ( small_pause > 0 ) {
+  			i=i+1;
+			back_to_server = javascript_read();
+			w.postMessage(back_to_server);
+			stats = javascript_read_stats();
+			html = "";
+			lines = stats.split("\n");
+			lines.sort( function( a, b ) {
+              return parseInt( a.split( ' ' )[ 0 ] ) - parseInt( b.split( ' ' )[ 0 ] );
+            } );
+			for(line=0 ; line < lines.length ; line++) {
+			  if ( (line+1) == {{ player_number }} ) {
+			    html = html + "<p style='color:yellow'>Player " + lines[line] + "</p><br>";
+			  }
+			}
+			html = html + "<br>others<br><br>";
+
+			for(line=0 ; line < lines.length ; line++) {
+			  if ( (line+1) != {{ player_number }} ) {
+			    html = html + "<p style='color:green'>Player " + lines[line] + "</p><br>";
+			  }
+			}
+			document.getElementById("scores").innerHTML =html;
+		} else {
+			w.postMessage("{{ game_number }}" +"/" + "{{ player_number }}");
+		}
+		small_pause = small_pause +1;
+  		setTimeout("timedCount()",33);
+	}
+
+</script>
+</body>
+</html>

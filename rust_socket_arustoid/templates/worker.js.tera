@@ -1,0 +1,19 @@
+var i = 0;
+
+var playing = -1;
+
+var ws;
+
+self.onmessage = function (event) {
+	if ( playing == -1 ) {
+		playing = event.data;
+		ws  = new WebSocket("{{ protocol }}://{{ socket_hostname_port }}/"+playing)
+		ws.onmessage = function (event) {
+  			postMessage(event.data);
+		};
+	} else {
+		if ( ws.readyState == 1 ) {
+			ws.send(event.data);
+		}
+	}
+}

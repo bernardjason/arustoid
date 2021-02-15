@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Cache-control" content="private">
+    <meta charset="UTF-8">
+    <title>arustoid</title>
+    <link rel="stylesheet" type="text/css" href="{{ proxy_prefix[0] | safe }}css/style.css">
+
+</head>
+<body>
+<div class="grid-container">
+    <div class="headingrow">
+        <a   class="headinghome"  href="/"><h2>/home</h2></a>
+        <a   class="headingtitle" href="{{ proxy_prefix[0] | safe }}"><h1>aRustOid</h1></a>
+        <img class="headingicon" src="{{ proxy_prefix[0] | safe }}img/bannerpixelship.png">
+    </div>
+    <div class="instructions">
+        <p>
+        Left,right arrow keys rotate craft.<br>
+        Up arrow to fly forward.<br>
+        Space to fire.<br>
+        Escape to stop playing
+        </p>
+        <p class="instructions_yellow">One player must start the game as player 1. The other needs to select from player 2 list for the same game number</p>
+        <p class="instructions_red">Destroy as many rocks as you can. You can fire on the other player but if you fly into them that's your problem<br>
+        </p>
+    </div>
+
+    <div class="bluebox">
+        <a href="{{ proxy_prefix[0]  | safe}}play/{{ new_game_number[0] }}/1">Play as player 1, game number {{ new_game_number[0] }}</a><br>
+    </div>
+    <br>
+    <br>
+    {% if current_games|length > 0 %}
+    <div class="banner">player 2 list</div>
+    <div class="bluebox">
+        {% for game_number in current_games|reverse %}
+        <a href="{{ proxy_prefix[0] | safe }}play/{{game_number}}/2">Play as player 2 for game {{game_number}}</a><br>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
