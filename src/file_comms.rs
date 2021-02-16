@@ -7,11 +7,6 @@ pub fn write_to_file(player:usize,state:&Vec<String>) -> std::io::Result<()> {
     let final_name =format!("player{}.txt",player) ;
     let mut file = File::create(tmp.clone())?;
     for s in state.iter() {
-        /*
-        if ! s.starts_with("0" ) {
-            file.write_all(format!("{} ",player).as_bytes())?;
-        }
-         */
         file.write_all(s.as_bytes())?;
     }
     fs::rename(tmp,final_name)?;

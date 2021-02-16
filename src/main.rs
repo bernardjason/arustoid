@@ -81,7 +81,7 @@ pub const SCALE_TO_SCREEN: f32 = 0.043;
 static mut GLOBAL_ID: u128 = 0;
 static mut PLAYER_NUMBER: usize = 1;
 static mut PLAYER_KEY: u128 = 0;
-const MAX_DEAD_KEYS_TO_KEEP: usize = 200;
+const MAX_DEAD_KEYS_TO_KEEP: usize = 50;
 const DELETE_PLAYER_NUMBER: usize = 0;
 
 pub const SHIP: u8 = 1;
@@ -169,7 +169,8 @@ pub fn write_current_data(output: *const c_char) {
         let mut data = DATA_TO_RETURN.lock().unwrap();
         data.clear();
         data.push_str(rust.to_str().unwrap());
-        data.push_str("--------------------------------");
+        data.push(char::from(0));
+        //data.push_str("--------------------------------");
     }
 }
 

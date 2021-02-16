@@ -12,8 +12,8 @@ pub struct DeleteEntry {
     click_age: i32,
 }
 
-const DELETE_CLICK_AGE: i32 = 500;
-const MAX_DELETE_HISTORY:usize = 200;
+const DELETE_CLICK_AGE: i32 = 200;
+const MAX_DELETE_HISTORY:usize = 100;
 
 impl DeleteEntry {
     pub fn new(record: String) -> DeleteEntry {
