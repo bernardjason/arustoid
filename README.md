@@ -36,6 +36,9 @@ rustup default nightly
 # first build the application
 cargo build --target=wasm31-unknown-emscripten && cp target/wasm32-unknown-emscripten/debug/arustoid* pkg/
 
+# You can run locally within SDL2 
+cargo run
+
 # now build the webserver
 cd rust_socket_arustoid
 cargo build 
