@@ -2,8 +2,8 @@
 template_dir = "templates/"
 address = "0.0.0.0"
 proxy_prefix='/'
-wsocket_hostname_port="192.168.1.90:9001"
-wssocket_hostname_port="192.168.1.90:9001"
+wsocket_hostname_port="127.0.0.1:9001"
+wssocket_hostname_port="127.0.0.1:9001"
 
 [production]
 port=9000
