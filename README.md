@@ -7,7 +7,7 @@ off the game, then player 2 needs to select the correct game number from the lis
 
 Use left,right,up arrow keys  and space to fire
 
-<img src="screenshot.png" width="30%"/>
+<img src="screenshot.png" width="70%"/>
 
 to try live go to https://bjason.org/game
 
